@@ -1,29 +1,30 @@
-name: CI Suite
+name: Node.js CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ main ]
+    branches: [ "main" ]
 
 jobs:
-  test-backend:
+  build-and-test:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
 
-      - name: Install dependencies
-        run: |
-          cd backend
-          npm install
+    - name: Install Dependencies
+      run: |
+        cd backend
+        npm install --force
 
-      - name: Run Tests
-        # We add 'CI=true' to ensure the test runner doesn't hang in the cloud
-        run: |
-          cd backend
-          CI=true npm test
+    - name: Run Integration Tests
+      run: |
+        cd backend
+        CI=true npm test
